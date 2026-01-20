@@ -6,42 +6,39 @@ on:
       - main
   workflow_dispatch:
 
+# สำคัญมาก สำหรับ GitHub Release
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
 
     steps:
-      # 1. ดึงโค้ดจาก GitHub
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. ติดตั้ง Flutter (เวอร์ชันตรงกับ Dart SDK)
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.38.7'
+          channel: stable
 
-      # 3. ตรวจสอบเวอร์ชัน
       - name: Flutter doctor
-        run: flutter doctor -v
+        run: flutter doctor
 
-      # 4. ดึง dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Build APK (release)
-      - name: Build APK
+      - name: Build APK (Release)
         run: flutter build apk --release
 
-      # 6. Upload APK เป็น Artifact (โหลดจาก Actions)
-      - name: Upload APK artifact
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
+          name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      # 7. สร้าง GitHub Release (ลิงก์ถาวร)
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
