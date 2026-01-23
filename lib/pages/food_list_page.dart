@@ -8,6 +8,7 @@ import '../data/food_data.dart';
 import '../models/food_item.dart';
 import 'food_detail_page.dart';
 import 'video_page.dart';
+import 'cart_page.dart';
 
 class FoodListPage extends StatefulWidget {
   const FoodListPage({super.key});
@@ -26,7 +27,6 @@ class _FoodListPageState extends State<FoodListPage> {
     _getGPS();
   }
 
-  /// 📍 ดึงพิกัดปัจจุบัน (ไม่ใช้ Google API)
   Future<void> _getGPS() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -44,7 +44,6 @@ class _FoodListPageState extends State<FoodListPage> {
     });
   }
 
-  /// 🧭 เปิดแอปแผนที่นำทาง
   Future<void> _navigateToShop(FoodItem f) async {
     if (lat == null || lng == null) return;
 
@@ -57,16 +56,50 @@ class _FoodListPageState extends State<FoodListPage> {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  /// ================= รายการอาหาร =================
+  /// 🔘 ปุ่มไอคอน
+  Widget actionIcon({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(14),
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 🍽 รายการอาหาร
   Widget foodSection(String title, List<FoodItem> foods) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         ListView.builder(
@@ -84,57 +117,104 @@ class _FoodListPageState extends State<FoodListPage> {
                 1000;
 
             return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              child: ListTile(
-                leading: Image.network(
-                  f.image,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.broken_image),
-                ),
-                title: Text(
-                  f.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  'ระยะทาง: ${distance.toStringAsFixed(2)} กม.\n'
-                  'พิกัดร้าน: ${f.lat}, ${f.lng}',
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+              elevation: 6,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.info_outline, color: Colors.blue),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => FoodDetailPage(food: f),
+                    /// แถวบน
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.network(
+                            f.image,
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const Icon(Icons.broken_image, size: 60),
                           ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon:
-                          const Icon(Icons.play_circle_fill, color: Colors.red),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => VideoPage(
-                              title: f.name,
-                              videoUrl: f.videoUrl,
-                            ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                f.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Chip(
+                                avatar: const Icon(
+                                  Icons.location_on,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                                backgroundColor: Colors.green,
+                                label: Text(
+                                  '${distance.toStringAsFixed(2)} กม.',
+                                  style:
+                                      const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon:
-                          const Icon(Icons.navigation, color: Colors.green),
-                      onPressed: () => _navigateToShop(f),
+
+                    const SizedBox(height: 12),
+
+                    /// 🔥 ไอคอนแนวนอน
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        actionIcon(
+                          icon: Icons.info_outline,
+                          color: Colors.blue,
+                          label: 'รายละเอียด',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    FoodDetailPage(food: f),
+                              ),
+                            );
+                          },
+                        ),
+                        actionIcon(
+                          icon: Icons.play_circle_outline,
+                          color: Colors.red,
+                          label: 'วิดีโอ',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => VideoPage(
+                                  title: f.name,
+                                  videoUrl: f.videoUrl,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        actionIcon(
+                          icon: Icons.directions,
+                          color: Colors.green,
+                          label: 'นำทาง',
+                          onTap: () => _navigateToShop(f),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -146,7 +226,6 @@ class _FoodListPageState extends State<FoodListPage> {
     );
   }
 
-  /// ================= BUILD =================
   @override
   Widget build(BuildContext context) {
     if (lat == null || lng == null) {
@@ -164,48 +243,54 @@ class _FoodListPageState extends State<FoodListPage> {
             icon: const Icon(Icons.my_location),
             onPressed: _getGPS,
           ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartPage()),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            /// 📍 พิกัดปัจจุบัน
+            /// 🗺 Map
             Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'พิกัดปัจจุบัน: $lat , $lng',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            /// 🗺 แผนที่ (OpenStreetMap)
-            SizedBox(
-              height: 220,
-              child: FlutterMap(
-                options: MapOptions(
-                  initialCenter: LatLng(lat!, lng!),
-                  initialZoom: 15,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: LatLng(lat!, lng!),
-                        width: 40,
-                        height: 40,
-                        child: const Icon(
-                          Icons.person_pin_circle,
-                          color: Colors.blue,
-                          size: 40,
-                        ),
+              padding: const EdgeInsets.all(14),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: SizedBox(
+                  height: 230,
+                  child: FlutterMap(
+                    options: MapOptions(
+                      initialCenter: LatLng(lat!, lng!),
+                      initialZoom: 15,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: LatLng(lat!, lng!),
+                            width: 40,
+                            height: 40,
+                            child: const Icon(
+                              Icons.person_pin_circle,
+                              color: Colors.red,
+                              size: 40,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
 

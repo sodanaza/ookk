@@ -26,7 +26,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   void initState() {
     super.initState();
 
-    final videoId = YoutubePlayer.convertUrlToId(widget.food.videoUrl) ?? '';
+    final videoId =
+        YoutubePlayer.convertUrlToId(widget.food.videoUrl) ?? '';
     _controller = YoutubePlayerController(
       initialVideoId: videoId,
       flags: const YoutubePlayerFlags(autoPlay: false),
@@ -43,8 +44,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied)
-      return;
+        permission == LocationPermission.denied) return;
 
     final pos = await Geolocator.getCurrentPosition();
     setState(() => _currentPosition = pos);
@@ -68,9 +68,9 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       ),
     );
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('เพิ่มสินค้าเข้าตะกร้าแล้ว')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('เพิ่มสินค้าเข้าตะกร้าแล้ว')),
+    );
   }
 
   @override
@@ -79,12 +79,34 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     super.dispose();
   }
 
+  Widget sectionTitle(String text, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.deepOrange),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final food = widget.food;
 
     return Scaffold(
-      appBar: AppBar(title: Text(food.name)),
+      appBar: AppBar(
+        title: Text(food.name),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,118 +117,93 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               showVideoProgressIndicator: true,
             ),
 
-            /// 🖼 รูปอาหาร
+            /// 🖼 รูปอาหาร + ราคา
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  food.image,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              padding: const EdgeInsets.all(16),
+              child: Card(
+                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
                 ),
-              ),
-            ),
-
-            /// 💰 ราคา
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                'ราคา ${food.price.toStringAsFixed(0)} บาท',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-
-            /// 🛒 ปุ่มเพิ่มเข้า Cart
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(18),
+                      ),
+                      child: Image.network(
+                        food.image,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    textStyle: const TextStyle(fontSize: 12),
-                    minimumSize: const Size(0, 0),
-                  ),
-                  icon: const Icon(Icons.add_shopping_cart, size: 16),
-                  label: const Text('เพิ่มลงในตะกร้า'),
-                  onPressed: _addToCart,
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '฿ ${food.price.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.add_shopping_cart),
+                            label: const Text('เพิ่มตะกร้า'),
+                            onPressed: _addToCart,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-
-         
 
             /// 📋 ส่วนประกอบ
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                'ส่วนประกอบ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+            sectionTitle('ส่วนประกอบ', Icons.list_alt),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: food.ingredients.map((e) => Text('• $e')).toList(),
+                children: food.ingredients
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Text('• $e'),
+                        ))
+                    .toList(),
               ),
             ),
 
             /// 👩‍🍳 วิธีทำ
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                'วิธีการทำ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+            sectionTitle('วิธีการทำ', Icons.restaurant_menu),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: food.steps
                     .asMap()
                     .entries
-                    .map((e) => Text('${e.key + 1}. ${e.value}'))
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text('${e.key + 1}. ${e.value}'),
+                      ),
+                    )
                     .toList(),
-              ),
-            ),
-
-            const Divider(),
-
-            /// 📍 พิกัด
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('พิกัดร้าน: ${food.lat}, ${food.lng}'),
-                  const SizedBox(height: 4),
-                  Text(
-                    _currentPosition == null
-                        ? 'พิกัดปัจจุบัน: กำลังค้นหา...'
-                        : 'พิกัดปัจจุบัน: '
-                              '${_currentPosition!.latitude}, '
-                              '${_currentPosition!.longitude}',
-                  ),
-                ],
               ),
             ),
 
             /// 🧭 ปุ่มนำทาง
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
+                height: 48,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.navigation),
                   label: const Text('นำทางไปยังร้าน'),
@@ -215,52 +212,58 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               ),
             ),
 
-            /// 🗺 แผนที่ (ล่างสุด)
-            SizedBox(
-              height: 250,
-              child: FlutterMap(
-                options: MapOptions(
-                  initialCenter: LatLng(food.lat, food.lng),
-                  initialZoom: 16,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: LatLng(food.lat, food.lng),
-                        width: 40,
-                        height: 40,
-                        child: const Icon(
-                          Icons.location_on,
-                          color: Colors.red,
-                          size: 40,
-                        ),
+            /// 🗺 แผนที่
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: SizedBox(
+                  height: 240,
+                  child: FlutterMap(
+                    options: MapOptions(
+                      initialCenter: LatLng(food.lat, food.lng),
+                      initialZoom: 16,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       ),
-                      if (_currentPosition != null)
-                        Marker(
-                          point: LatLng(
-                            _currentPosition!.latitude,
-                            _currentPosition!.longitude,
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: LatLng(food.lat, food.lng),
+                            width: 40,
+                            height: 40,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 40,
+                            ),
                           ),
-                          width: 40,
-                          height: 40,
-                          child: const Icon(
-                            Icons.person_pin_circle,
-                            color: Colors.blue,
-                            size: 40,
-                          ),
-                        ),
+                          if (_currentPosition != null)
+                            Marker(
+                              point: LatLng(
+                                _currentPosition!.latitude,
+                                _currentPosition!.longitude,
+                              ),
+                              width: 40,
+                              height: 40,
+                              child: const Icon(
+                                Icons.person_pin_circle,
+                                color: Colors.blue,
+                                size: 40,
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
           ],
         ),
       ),
