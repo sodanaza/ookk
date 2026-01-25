@@ -22,6 +22,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   late YoutubePlayerController _controller;
   Position? _currentPosition;
 
+  final Color mainGreen = const Color(0xFF2E7D32);
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +71,10 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('เพิ่มสินค้าเข้าตะกร้าแล้ว')),
+      const SnackBar(
+        content: Text('เพิ่มสินค้าเข้าตะกร้าแล้ว'),
+        backgroundColor: Color(0xFF2E7D32),
+      ),
     );
   }
 
@@ -84,13 +89,14 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
       child: Row(
         children: [
-          Icon(icon, color: Colors.deepOrange),
+          Icon(icon, color: mainGreen),
           const SizedBox(width: 6),
           Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: mainGreen,
             ),
           ),
         ],
@@ -106,6 +112,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       appBar: AppBar(
         title: Text(food.name),
         centerTitle: true,
+        backgroundColor: mainGreen,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -117,23 +124,23 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               showVideoProgressIndicator: true,
             ),
 
-            /// 🖼 รูปอาหาร + ราคา
+            /// 🖼 รูป + ราคา
             Padding(
               padding: const EdgeInsets.all(16),
               child: Card(
                 elevation: 6,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: [
                     ClipRRect(
                       borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(18),
+                        top: Radius.circular(20),
                       ),
                       child: Image.network(
                         food.image,
-                        height: 200,
+                        height: 210,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
@@ -145,15 +152,22 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                         children: [
                           Text(
                             '฿ ${food.price.toStringAsFixed(0)}',
-                            style: const TextStyle(
-                              fontSize: 22,
+                            style: TextStyle(
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                              color: mainGreen,
                             ),
                           ),
                           ElevatedButton.icon(
                             icon: const Icon(Icons.add_shopping_cart),
                             label: const Text('เพิ่มตะกร้า'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: mainGreen,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
                             onPressed: _addToCart,
                           ),
                         ],
@@ -171,10 +185,12 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: food.ingredients
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Text('• $e'),
-                        ))
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text('• $e'),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -203,10 +219,17 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
-                height: 48,
+                height: 50,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.navigation),
                   label: const Text('นำทางไปยังร้าน'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainGreen,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                   onPressed: _navigate,
                 ),
               ),
@@ -216,7 +239,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(20),
                 child: SizedBox(
                   height: 240,
                   child: FlutterMap(

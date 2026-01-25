@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 import 'pages/food_list_page.dart';
-import 'pages/cart_page.dart';
 import 'pages/order_history_page.dart';
+import 'pages/team_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// ✅ แยก HomePage ออกมา
+/// ✅ HomePage
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -76,20 +76,20 @@ class HomePage extends StatelessWidget {
 
             _menuCard(
               context,
-              icon: Icons.shopping_cart,
-              title: 'Cart',
-              subtitle: 'ตะกร้าสินค้า',
-              page: const CartPage(),
+              icon: Icons.receipt_long,
+              title: 'ประวัติการสั่งซื้อ',
+              subtitle: 'รายการสั่งซื้อที่ผ่านมา',
+              page: const OrderHistoryPage(),
             ),
 
             const SizedBox(height: 20),
 
             _menuCard(
               context,
-              icon: Icons.receipt_long,
-              title: 'ประวัติการสั่งซื้อ',
-              subtitle: 'รายการสั่งซื้อที่ผ่านมา',
-              page: const OrderHistoryPage(),
+              icon: Icons.group,
+              title: 'About / Team',
+              subtitle: 'ข้อมูลสมาชิกในทีม',
+              page: const TeamPage(),
             ),
           ],
         ),

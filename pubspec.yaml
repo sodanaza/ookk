@@ -33,6 +33,7 @@ flutter:
   # 🔹 เพิ่ม assets รูปอาหาร
   assets:
     - assets/images/
+    - assets/team/
 
 flutter_icons:
   android: true

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/food_data.dart';
@@ -56,7 +54,7 @@ class _FoodListPageState extends State<FoodListPage> {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  /// 🔘 ปุ่มไอคอน
+  /// 🔘 ปุ่มไอคอนแนวนอน
   Widget actionIcon({
     required IconData icon,
     required Color color,
@@ -69,18 +67,18 @@ class _FoodListPageState extends State<FoodListPage> {
       child: Column(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
               color: color.withOpacity(0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 22),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             label,
-            style: const TextStyle(fontSize: 11),
+            style: const TextStyle(fontSize: 12),
           ),
         ],
       ),
@@ -93,12 +91,13 @@ class _FoodListPageState extends State<FoodListPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(18, 20, 18, 8),
           child: Text(
             title,
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: Color(0xFF1B5E20),
             ),
           ),
         ),
@@ -120,21 +119,21 @@ class _FoodListPageState extends State<FoodListPage> {
               elevation: 6,
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(22),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(14),
                 child: Column(
                   children: [
-                    /// แถวบน
+                    /// 🔝 ข้อมูลหลัก
                     Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                           child: Image.network(
                             f.image,
-                            width: 90,
-                            height: 90,
+                            width: 95,
+                            height: 95,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) =>
                                 const Icon(Icons.broken_image, size: 60),
@@ -156,14 +155,16 @@ class _FoodListPageState extends State<FoodListPage> {
                               Chip(
                                 avatar: const Icon(
                                   Icons.location_on,
-                                  size: 18,
+                                  size: 16,
                                   color: Colors.white,
                                 ),
-                                backgroundColor: Colors.green,
+                                backgroundColor:
+                                    const Color(0xFF2E7D32),
                                 label: Text(
                                   '${distance.toStringAsFixed(2)} กม.',
-                                  style:
-                                      const TextStyle(color: Colors.white),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -172,7 +173,8 @@ class _FoodListPageState extends State<FoodListPage> {
                       ],
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
+                    const Divider(),
 
                     /// 🔥 ไอคอนแนวนอน
                     Row(
@@ -235,9 +237,11 @@ class _FoodListPageState extends State<FoodListPage> {
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
       appBar: AppBar(
         title: const Text('ร้านอาหารใกล้ฉัน'),
         centerTitle: true,
+        backgroundColor: const Color(0xFF2E7D32),
         actions: [
           IconButton(
             icon: const Icon(Icons.my_location),
@@ -257,45 +261,11 @@ class _FoodListPageState extends State<FoodListPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            /// 🗺 Map
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: SizedBox(
-                  height: 230,
-                  child: FlutterMap(
-                    options: MapOptions(
-                      initialCenter: LatLng(lat!, lng!),
-                      initialZoom: 15,
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      ),
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: LatLng(lat!, lng!),
-                            width: 40,
-                            height: 40,
-                            child: const Icon(
-                              Icons.person_pin_circle,
-                              color: Colors.red,
-                              size: 40,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            /// 🗺 แผนที่
+           
 
             foodSection('🍛 อาหารคาว', savoryFoods),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             foodSection('🍰 อาหารหวาน', sweetFoods),
             const SizedBox(height: 80),
           ],
