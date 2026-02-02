@@ -25,16 +25,16 @@ class TeamPage extends StatelessWidget {
         ),
         child: ListView(
           padding: const EdgeInsets.all(16),
-          children: const [
+          children: [
             Center(
               child: Column(
-                children: [
+                children: const [
                   Icon(
                     Icons.group,
                     size: 60,
                     color: Color(0xFF2E7D32),
                   ),
-                  SizedBox(height: 😎,
+                  SizedBox(height: 8),
                   Text(
                     'ทีมผู้พัฒนาแอป',
                     style: TextStyle(
@@ -46,7 +46,7 @@ class TeamPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             TeamCard(
               image: 'assets/team/member1.jpg',
@@ -54,14 +54,12 @@ class TeamPage extends StatelessWidget {
               role: 'Frontend / UI Design',
               id: 'รหัสนักศึกษา 68319010001',
             ),
-
             TeamCard(
               image: 'assets/team/member2.jpg',
               name: 'นายปิยะวัชร์ สุระชัย',
               role: 'Backend / Logic',
               id: 'รหัสนักศึกษา 683190100012',
             ),
-
             TeamCard(
               image: 'assets/team/member3.jpg',
               name: 'นายพีรดนย์ บุตรขนทอง',
@@ -113,6 +111,7 @@ class TeamCard extends StatelessWidget {
               child: CircleAvatar(
                 radius: 38,
                 backgroundImage: AssetImage(image),
+                backgroundColor: Colors.grey.shade200,
               ),
             ),
             const SizedBox(width: 16),
@@ -133,16 +132,17 @@ class TeamCard extends StatelessWidget {
 
                   Row(
                     children: [
-                      const Icon(Icons.work, size: 18, color: Color(0xFF388E3C)),
+                      const Icon(Icons.work,
+                          size: 18, color: Color(0xFF388E3C)),
                       const SizedBox(width: 6),
                       Text(role),
                     ],
                   ),
-
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.badge, size: 18, color: Color(0xFF388E3C)),
+                      const Icon(Icons.badge,
+                          size: 18, color: Color(0xFF388E3C)),
                       const SizedBox(width: 6),
                       Text(id),
                     ],
