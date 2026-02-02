@@ -34,7 +34,7 @@ class TeamPage extends StatelessWidget {
                     size: 60,
                     color: Color(0xFF2E7D32),
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: 😎,
                   Text(
                     'ทีมผู้พัฒนาแอป',
                     style: TextStyle(
@@ -46,7 +46,6 @@ class TeamPage extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 24),
 
             TeamCard(
@@ -102,7 +101,6 @@ class TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            /// รูปสมาชิก
             Container(
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
@@ -117,10 +115,8 @@ class TeamCard extends StatelessWidget {
                 backgroundImage: AssetImage(image),
               ),
             ),
-
             const SizedBox(width: 16),
 
-            /// ข้อมูลสมาชิก
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,39 +129,27 @@ class TeamCard extends StatelessWidget {
                       color: Color(0xFF1B5E20),
                     ),
                   ),
-
-                  const SizedBox(height: 😎,
+                  const SizedBox(height: 8),
 
                   Row(
                     children: [
                       const Icon(Icons.work, size: 18, color: Color(0xFF388E3C)),
                       const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          role,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
+                      Text(role),
                     ],
                   ),
 
                   const SizedBox(height: 6),
-
                   Row(
                     children: [
                       const Icon(Icons.badge, size: 18, color: Color(0xFF388E3C)),
                       const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          id,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
+                      Text(id),
                     ],
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
