@@ -1,138 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+// import ไฟล์อื่นๆ ของคุณที่นี่
+import 'main1.dart';
+import 'main2.dart';
+import 'main3.dart';
 
-import 'pages/food_list_page.dart';
-import 'pages/order_history_page.dart';
-import 'pages/team_page.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+void main() {
+  runApp(const MaterialApp(home: MainMenu()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
-}
-
-/// ✅ HomePage
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MainMenu extends StatelessWidget {
+  const MainMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF4CAF50),
-              Color(0xFF2E7D32),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      appBar: AppBar(title: const Text('เมนูเลือกหน้า')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _menuButton(
+            context,
+            'ไปหน้า main1 (ข้อมูลนักเรียน)',
+            const StudentPage1(),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.restaurant_menu,
-              size: 90,
-              color: Colors.white,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Flutter Project รวมกลุ่ม',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 40),
-
-            _menuCard(
-              context,
-              icon: Icons.fastfood,
-              title: 'รายการอาหาร',
-              subtitle: 'ดูเมนูอาหารทั้งหมด',
-              page: const FoodListPage(),
-            ),
-
-            const SizedBox(height: 20),
-
-            _menuCard(
-              context,
-              icon: Icons.receipt_long,
-              title: 'ประวัติการสั่งซื้อ',
-              subtitle: 'รายการสั่งซื้อที่ผ่านมา',
-              page: const OrderHistoryPage(),
-            ),
-
-            const SizedBox(height: 20),
-
-            _menuCard(
-              context,
-              icon: Icons.group,
-              title: 'About / Team',
-              subtitle: 'ข้อมูลสมาชิกในทีม',
-              page: const TeamPage(),
-            ),
-          ],
-        ),
+          _menuButton(context, 'ไปหน้า main2', const StudentPage2()),
+          _menuButton(context, 'ไปหน้า main3', const StudentPage3()),
+        ],
       ),
     );
   }
 
-  Widget _menuCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Widget page,
-  }) {
-    return SizedBox(
-      width: 300,
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 26,
-            backgroundColor: Colors.green.shade600,
-            child: Icon(icon, color: Colors.white, size: 28),
-          ),
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          subtitle: Text(subtitle),
-          trailing: const Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => page),
-            );
-          },
-        ),
+  Widget _menuButton(BuildContext context, String title, Widget page) {
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
+        },
       ),
     );
   }
